@@ -28,17 +28,17 @@ public class SlackBotService {
     private final ObjectMapper objectMapper;
     private final WebClient webClient;
 
-    public SlackBotService(ObjectMapper objectMapper) {
+    public SlackBotService(ObjectMapper objectMapper, WebClient.Builder webclientBuilder) {
         this.objectMapper = objectMapper;
-        this.webClient = initWebClient();
+        this.webClient = initWebClient(webclientBuilder);
     }
 
-    private WebClient initWebClient() {
+    private WebClient initWebClient(WebClient.Builder webClientBuilder) {
         ExchangeStrategies strategies = ExchangeStrategies.builder()
                 .codecs(config ->
-                        config.customCodecs().encoder(new Jackson2JsonEncoder(objectMapper, MediaType.APPLICATION_JSON))
+                        config.customCodecs().register(new Jackson2JsonEncoder(objectMapper, MediaType.APPLICATION_JSON))
                 ).build();
-        return WebClient.builder()
+        return webClientBuilder
                 .exchangeStrategies(strategies)
                 .baseUrl(BASE_URL)
                 .defaultHeader(HttpHeaders.AUTHORIZATION, TOKEN)
@@ -56,7 +56,6 @@ public class SlackBotService {
     }
 
     private void send(String url, Object dto) {
-        System.out.println("dto : " + dto);
         String response = webClient.post()
                 .uri(url)
                 .body(BodyInserters.fromValue(dto))

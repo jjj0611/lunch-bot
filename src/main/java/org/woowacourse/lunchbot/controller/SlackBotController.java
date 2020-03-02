@@ -28,7 +28,6 @@ public class SlackBotController {
             case URL_VERIFICATION:
                 return ResponseEntity.ok(reqJson.get("challenge"));
             case EVENT_CALLBACK:
-                System.out.println();
                 slackBotService.showMenu(jsonToDto(reqJson, EventCallBackRequest.class));
                 return ResponseEntity.ok().build();
             default:
