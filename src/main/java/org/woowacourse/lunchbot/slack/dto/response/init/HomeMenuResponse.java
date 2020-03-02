@@ -1,4 +1,4 @@
-package org.woowacourse.lunchbot.slack.dto.response;
+package org.woowacourse.lunchbot.slack.dto.response.init;
 
 import org.woowacourse.lunchbot.slack.fragment.view.HomeView;
 

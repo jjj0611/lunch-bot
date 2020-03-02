@@ -12,9 +12,11 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.woowacourse.lunchbot.slack.EventType;
+import org.woowacourse.lunchbot.slack.InitMenuType;
+import org.woowacourse.lunchbot.slack.dto.request.BlockActionRequest;
 import org.woowacourse.lunchbot.slack.dto.request.EventCallBackRequest;
-import org.woowacourse.lunchbot.slack.dto.response.InitHomeMenuResponseFactory;
 import org.woowacourse.lunchbot.slack.dto.response.Message;
+import org.woowacourse.lunchbot.slack.dto.response.init.InitHomeMenuResponseFactory;
 
 @Slf4j
 @Service
@@ -52,6 +54,12 @@ public class SlackBotService {
                 break;
             case APP_HOME_OPENED:
                 send("/views.publish", InitHomeMenuResponseFactory.of(request.getUserId()));
+        }
+    }
+
+    public void showModal(BlockActionRequest request) {
+        if (request.getBlockId().equals("initial_block")) {
+            send("/views.open", InitMenuType.of(request.getActionId()).apply(request.getTriggerId()));
         }
     }
 
