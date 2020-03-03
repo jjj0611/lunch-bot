@@ -28,40 +28,6 @@ public class ModalView {
         this.blocks = blocks;
     }
 
-    public ModalView(ModalSubmissionType callbackId, PlainText title, PlainText submit, PlainText close, List<Block> blocks) {
-        this.callbackId = callbackId;
-        this.title = title;
-        this.submit = submit;
-        this.close = close;
-        this.blocks = blocks;
-    }
-
-    public ModalView(ModalSubmissionType callbackId, String privateMetadata, PlainText title, PlainText close, List<Block> blocks) {
-        this.callbackId = callbackId;
-        this.privateMetadata = privateMetadata;
-        this.title = title;
-        this.close = close;
-        this.blocks = blocks;
-    }
-
-    public ModalView(ModalSubmissionType callbackId, String privateMetadata, PlainText title,
-                     PlainText submit, PlainText close, List<Block> blocks) {
-        this.callbackId = callbackId;
-        this.privateMetadata = privateMetadata;
-        this.title = title;
-        this.submit = submit;
-        this.close = close;
-        this.blocks = blocks;
-    }
-
-    public ModalView(ModalSubmissionType callbackId, PlainText title, PlainText close, List<Block> blocks, boolean clearOnClose) {
-        this.callbackId = callbackId;
-        this.title = title;
-        this.close = close;
-        this.blocks = blocks;
-        this.clearOnClose = clearOnClose;
-    }
-
     public String getType() {
         return type;
     }
