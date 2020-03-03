@@ -1,5 +1,6 @@
 package org.woowacourse.lunchbot.slack.dto.response.result;
 
+import org.woowacourse.lunchbot.slack.RestaurantType;
 import org.woowacourse.lunchbot.slack.dto.response.common.ModalResponse;
 import org.woowacourse.lunchbot.slack.dto.response.common.ModalSubmissionType;
 import org.woowacourse.lunchbot.slack.fragment.block.SectionBlock;
@@ -9,17 +10,17 @@ import org.woowacourse.lunchbot.slack.fragment.view.ModalView;
 
 import java.util.Arrays;
 
-public class WesternResultResponseFactory {
+public class ResultResponsFactory {
 
-    public static ModalResponse of(String triggerId) {
+    public static ModalResponse of(String triggerId, RestaurantType restaurantType) {
 
         ModalView modalView = new ModalView(
-                ModalSubmissionType.WESTERN_RESULT,
-                new PlainText("양식"),
+                ModalSubmissionType.of(restaurantType.getModalSubmissionType()),
+                new PlainText(restaurantType.getTitle()),
                 new PlainText("취소"),
                 Arrays.asList(
-                        new SectionBlock(new MrkdwnText("*양식1*")),
-                        new SectionBlock(new MrkdwnText("*양식2*"))
+                        new SectionBlock(new MrkdwnText("*메뉴1*")),
+                        new SectionBlock(new MrkdwnText("*메뉴2*"))
                 )
         );
 

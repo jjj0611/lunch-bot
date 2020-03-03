@@ -12,11 +12,12 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.woowacourse.lunchbot.slack.EventType;
-import org.woowacourse.lunchbot.slack.InitMenuType;
+import org.woowacourse.lunchbot.slack.RestaurantType;
 import org.woowacourse.lunchbot.slack.dto.request.BlockActionRequest;
 import org.woowacourse.lunchbot.slack.dto.request.EventCallBackRequest;
 import org.woowacourse.lunchbot.slack.dto.response.Message;
 import org.woowacourse.lunchbot.slack.dto.response.init.InitHomeMenuResponseFactory;
+import org.woowacourse.lunchbot.slack.dto.response.result.ResultResponsFactory;
 
 @Slf4j
 @Service
@@ -25,7 +26,8 @@ public class SlackBotService {
     private static final Logger logger = LoggerFactory.getLogger(SlackBotService.class);
 
     private static final String BASE_URL = "https://slack.com/api";
-    private static final String TOKEN = "Bearer " + System.getenv("BOT_TOKEN");
+    //    private static final String TOKEN = "Bearer " + System.getenv("BOT_TOKEN");
+    private static final String TOKEN = "Bearer " + "xoxb-946531805872-946555368885-rXj72TLVMurlXnmYVx2ScC9j";
 
     private final ObjectMapper objectMapper;
     private final WebClient webClient;
@@ -58,8 +60,10 @@ public class SlackBotService {
     }
 
     public void showModal(BlockActionRequest request) {
+//        String restaurantType = request.getActionId();
         if (request.getBlockId().equals("initial_block")) {
-            send("/views.open", InitMenuType.of(request.getActionId()).apply(request.getTriggerId()));
+            String type = request.getActionId();
+            send("/views.open", ResultResponsFactory.of(request.getTriggerId(), RestaurantType.from(type)));
         }
     }
 
@@ -69,9 +73,7 @@ public class SlackBotService {
                 .body(BodyInserters.fromValue(dto))
                 .exchange().block().bodyToMono(String.class)
                 .block();
-
         logger.debug("WebClient Response: {}", response);
-        System.out.println("response : " + response);
     }
 
 }
