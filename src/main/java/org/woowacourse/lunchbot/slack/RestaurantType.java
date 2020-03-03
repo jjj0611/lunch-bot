@@ -2,9 +2,9 @@ package org.woowacourse.lunchbot.slack;
 
 public enum RestaurantType {
 
-    RECOMMAND("recommand", "recommand_result", "오늘의 추천"),
+    RECOMMEND("recommend", "recommend_result", "오늘의 추천"),
     KOREAN("korean", "korean_result", "한식"),
-    CHINESE("china", "china_result", "중식"),
+    CHINESE("chinese", "china_result", "중식"),
     WESTERN("western", "western_result", "양식"),
     INDIA("india", "india_result", "인도식"),
     VIETNAM("vietnam", "vietnam_result", "베트남식"),

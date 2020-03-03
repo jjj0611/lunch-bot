@@ -11,13 +11,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.woowacourse.lunchbot.domain.Restaurant;
 import org.woowacourse.lunchbot.slack.EventType;
 import org.woowacourse.lunchbot.slack.RestaurantType;
 import org.woowacourse.lunchbot.slack.dto.request.BlockActionRequest;
 import org.woowacourse.lunchbot.slack.dto.request.EventCallBackRequest;
 import org.woowacourse.lunchbot.slack.dto.response.Message;
+import org.woowacourse.lunchbot.slack.dto.response.common.ModalResponse;
 import org.woowacourse.lunchbot.slack.dto.response.init.InitHomeMenuResponseFactory;
-import org.woowacourse.lunchbot.slack.dto.response.result.ResultResponsFactory;
+import org.woowacourse.lunchbot.slack.dto.response.result.ResultResponseFactory;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -26,8 +31,7 @@ public class SlackBotService {
     private static final Logger logger = LoggerFactory.getLogger(SlackBotService.class);
 
     private static final String BASE_URL = "https://slack.com/api";
-    //    private static final String TOKEN = "Bearer " + System.getenv("BOT_TOKEN");
-    private static final String TOKEN = "Bearer " + "xoxb-946531805872-946555368885-rXj72TLVMurlXnmYVx2ScC9j";
+    private static final String TOKEN = "Bearer " + System.getenv("BOT_TOKEN");
 
     private final ObjectMapper objectMapper;
     private final WebClient webClient;
@@ -60,11 +64,25 @@ public class SlackBotService {
     }
 
     public void showModal(BlockActionRequest request) {
-//        String restaurantType = request.getActionId();
         if (request.getBlockId().equals("initial_block")) {
             String type = request.getActionId();
-            send("/views.open", ResultResponsFactory.of(request.getTriggerId(), RestaurantType.from(type)));
+            List<Restaurant> restaurants = findRestaurants(type);
+            ModalResponse modalResponse = ResultResponseFactory.of(
+                    request.getTriggerId(), RestaurantType.from(type), restaurants);
+            send("/views.open", modalResponse);
         }
+    }
+
+    private List<Restaurant> findRestaurants(String type) {
+        Restaurant restaurant = new Restaurant(
+                "수가성순두부전문점",
+                "한식",
+                "해물순두부",
+                8000,
+                "https://store.naver.com/restaurants/detail?id=13158870",
+                "http://bitly.kr/CRATAuHz"
+        ); // RestaurantService가 데이터 불러오기
+        return Arrays.asList(restaurant);
     }
 
     private void send(String url, Object dto) {
