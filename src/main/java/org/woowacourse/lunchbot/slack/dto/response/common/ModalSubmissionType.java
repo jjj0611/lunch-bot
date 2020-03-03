@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum ModalSubmissionType {
 
-    RECOMMAND_RESULT("recommand_result"),
+    RECOMMEND_RESULT("recommend_result"),
     KOREAN_RESULT("korean_result"),
     CHINESE_RESULT("chinese_result"),
     WESTERN_RESULT("western_result"),

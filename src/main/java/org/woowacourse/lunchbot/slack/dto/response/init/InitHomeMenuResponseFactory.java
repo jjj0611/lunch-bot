@@ -27,14 +27,14 @@ public class InitHomeMenuResponseFactory {
         blocks.add(new DividerBlock());
 
         List<Element> elements = Arrays.asList(
-                new ButtonElement(new PlainText(":spiral_calendar_pad: 오늘 뭐 먹지?"), "recommand"),
+                new ButtonElement(new PlainText(":spiral_calendar_pad: 오늘 뭐 먹지?"), "recommend"),
                 new ButtonElement(new PlainText(":rice: 한식"), "korean"),
                 new ButtonElement(new PlainText(":dumpling: 중식"), "chinese"),
                 new ButtonElement(new PlainText(":cut_of_meat: 양식"), "western"),
                 new ButtonElement(new PlainText(":curry: 인도"), "india"),
                 new ButtonElement(new PlainText(":ramen: 베트남"), "vietnam"),
-                new ButtonElement(new PlainText(":sushi: 일식"), "japanese"));
-
+                new ButtonElement(new PlainText(":sushi: 일식"), "japanese")
+        );
 
         blocks.add(new ActionsBlock("initial_block", elements));
 
