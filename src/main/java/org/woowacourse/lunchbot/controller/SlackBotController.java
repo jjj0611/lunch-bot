@@ -45,7 +45,9 @@ public class SlackBotController {
         JsonNode reqJson = objectMapper.readTree(req.get("payload"));
         switch (RequestType.of(reqJson.get("type").asText())) {
             case BLOCK_ACTIONS:
+                System.out.println("req : " + reqJson);
                 slackBotService.showModal(jsonToDto(reqJson, BlockActionRequest.class));
+                System.out.println(6);
                 return ResponseEntity.ok().build();
             case VIEW_SUBMISSION:
 //                return ResponseEntity.ok(Objects.requireNonNull(generateModalSubmissionResponse(reqJson)));

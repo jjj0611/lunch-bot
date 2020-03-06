@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.woowacourse.lunchbot.domain.Restaurant;
 import org.woowacourse.lunchbot.slack.EventType;
 import org.woowacourse.lunchbot.slack.RestaurantType;
 import org.woowacourse.lunchbot.slack.dto.request.BlockActionRequest;
@@ -20,8 +19,8 @@ import org.woowacourse.lunchbot.slack.dto.response.Message;
 import org.woowacourse.lunchbot.slack.dto.response.common.ModalResponse;
 import org.woowacourse.lunchbot.slack.dto.response.init.InitHomeMenuResponseFactory;
 import org.woowacourse.lunchbot.slack.dto.response.result.ResultResponseFactory;
+import org.woowacourse.lunchbot.slack.fragment.block.Block;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -35,10 +34,12 @@ public class SlackBotService {
 
     private final ObjectMapper objectMapper;
     private final WebClient webClient;
+    private final RestaurantService restaurantService;
 
-    public SlackBotService(ObjectMapper objectMapper, WebClient.Builder webclientBuilder) {
+    public SlackBotService(ObjectMapper objectMapper, WebClient.Builder webclientBuilder, RestaurantService restaurantService) {
         this.objectMapper = objectMapper;
         this.webClient = initWebClient(webclientBuilder);
+        this.restaurantService = restaurantService;
     }
 
     private WebClient initWebClient(WebClient.Builder webClientBuilder) {
@@ -65,24 +66,17 @@ public class SlackBotService {
 
     public void showModal(BlockActionRequest request) {
         if (request.getBlockId().equals("initial_block")) {
-            String type = request.getActionId();
-            List<Restaurant> restaurants = findRestaurants(type);
+            System.out.println(1);
+            RestaurantType restaurantType = RestaurantType.from(request.getActionId());
+            System.out.println(2);
+            List<Block> restaurants = restaurantService.findByType(restaurantType);
+            System.out.println(3);
             ModalResponse modalResponse = ResultResponseFactory.of(
-                    request.getTriggerId(), RestaurantType.from(type), restaurants);
+                    request.getTriggerId(), restaurantType, restaurants);
+            System.out.println(4);
             send("/views.open", modalResponse);
+            System.out.println(5);
         }
-    }
-
-    private List<Restaurant> findRestaurants(String type) {
-        Restaurant restaurant = new Restaurant(
-                "수가성순두부전문점",
-                "한식",
-                "해물순두부",
-                8000,
-                "https://store.naver.com/restaurants/detail?id=13158870",
-                "http://bitly.kr/CRATAuHz"
-        ); // RestaurantService가 데이터 불러오기
-        return Arrays.asList(restaurant);
     }
 
     private void send(String url, Object dto) {
@@ -92,6 +86,7 @@ public class SlackBotService {
                 .exchange().block().bodyToMono(String.class)
                 .block();
         logger.debug("WebClient Response: {}", response);
+        System.out.println("response: " + response);
     }
 
 }
