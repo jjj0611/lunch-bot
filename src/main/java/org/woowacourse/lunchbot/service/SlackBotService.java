@@ -66,16 +66,11 @@ public class SlackBotService {
 
     public void showModal(BlockActionRequest request) {
         if (request.getBlockId().equals("initial_block")) {
-            System.out.println(1);
             RestaurantType restaurantType = RestaurantType.from(request.getActionId());
-            System.out.println(2);
             List<Block> restaurants = restaurantService.findByType(restaurantType);
-            System.out.println(3);
             ModalResponse modalResponse = ResultResponseFactory.of(
                     request.getTriggerId(), restaurantType, restaurants);
-            System.out.println(4);
             send("/views.open", modalResponse);
-            System.out.println(5);
         }
     }
 
@@ -85,8 +80,7 @@ public class SlackBotService {
                 .body(BodyInserters.fromValue(dto))
                 .exchange().block().bodyToMono(String.class)
                 .block();
-        logger.debug("WebClient Response: {}", response);
-        System.out.println("response: " + response);
+        logger.info("response = {}", response);
     }
 
 }
