@@ -22,8 +22,8 @@ public class InitHomeMenuResponseFactory {
         ));
         blocks.add(BlockResponseFactory.createTogetherActionBlock("eat_together"));
         blocks.add(new DividerBlock());
-        blocks.add(BlockResponseFactory.createRecommendBlock("recommend_block"));
-        blocks.add(BlockResponseFactory.createInitActionBlock("initial_block"));
+        blocks.add(BlockResponseFactory.createRecommendBlock("recommend_menu"));
+        blocks.add(BlockResponseFactory.createInitActionBlock("retrieve_menu"));
 
         return new HomeMenuResponse(userId, new HomeView(blocks));
     }

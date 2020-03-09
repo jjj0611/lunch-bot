@@ -31,7 +31,7 @@ public class SlackBotService {
     private static final Logger logger = LoggerFactory.getLogger(SlackBotService.class);
 
     private static final String BASE_URL = "https://slack.com/api";
-    private static final String TOKEN = "Bearer " + "xoxb-946531805872-946555368885-sIyiOGUwysHXlKHOjRVzIn5b";
+    private static final String TOKEN = "Bearer " + "xoxb-946531805872-946555368885-pPUBbFvqwgg35vvv5kRBWBLm";
 
     private final ObjectMapper objectMapper;
     private final WebClient webClient;
@@ -71,7 +71,7 @@ public class SlackBotService {
                 List<Restaurant> recommendRestaurants = restaurantService.findRecommends();
                 ModalResponse recommendModalResponse = ResultResponseFactory.ofRandom(
                         request.getTriggerId(), recommendRestaurants);
-                send("view.open", recommendModalResponse);
+                send("/views.open", recommendModalResponse);
                 break;
             case RETRIEVE_MENU:
                 RestaurantType restaurantType = RestaurantType.from(request.getActionId());

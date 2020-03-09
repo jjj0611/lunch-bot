@@ -9,7 +9,10 @@ import java.util.List;
 public class InitResponseFactory {
     public static InitResponse of(String channel) {
 
-        List<Block> blocks = Arrays.asList(BlockResponseFactory.createInitActionBlock("initial_block"));
+        List<Block> blocks = Arrays.asList(
+                BlockResponseFactory.createRecommendBlock("recommend_menu"),
+                BlockResponseFactory.createInitActionBlock("retrieve_menu")
+        );
 
         return new InitResponse(channel, blocks);
     }
