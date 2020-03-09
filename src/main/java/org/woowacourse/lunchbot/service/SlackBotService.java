@@ -12,16 +12,16 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.woowacourse.lunchbot.domain.Restaurant;
+import org.woowacourse.lunchbot.slack.BlockIdType;
 import org.woowacourse.lunchbot.slack.EventType;
 import org.woowacourse.lunchbot.slack.RestaurantType;
 import org.woowacourse.lunchbot.slack.dto.request.BlockActionRequest;
 import org.woowacourse.lunchbot.slack.dto.request.EventCallBackRequest;
-import org.woowacourse.lunchbot.slack.dto.response.Message;
 import org.woowacourse.lunchbot.slack.dto.response.common.ModalResponse;
 import org.woowacourse.lunchbot.slack.dto.response.init.InitHomeMenuResponseFactory;
+import org.woowacourse.lunchbot.slack.dto.response.init.InitResponseFactory;
 import org.woowacourse.lunchbot.slack.dto.response.result.ResultResponseFactory;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -31,14 +31,16 @@ public class SlackBotService {
     private static final Logger logger = LoggerFactory.getLogger(SlackBotService.class);
 
     private static final String BASE_URL = "https://slack.com/api";
-    private static final String TOKEN = "Bearer " + System.getenv("BOT_TOKEN");
+    private static final String TOKEN = "Bearer " + "xoxb-946531805872-946555368885-pPUBbFvqwgg35vvv5kRBWBLm";
 
     private final ObjectMapper objectMapper;
     private final WebClient webClient;
+    private final RestaurantService restaurantService;
 
-    public SlackBotService(ObjectMapper objectMapper, WebClient.Builder webclientBuilder) {
+    public SlackBotService(ObjectMapper objectMapper, WebClient.Builder webclientBuilder, RestaurantService restaurantService) {
         this.objectMapper = objectMapper;
         this.webClient = initWebClient(webclientBuilder);
+        this.restaurantService = restaurantService;
     }
 
     private WebClient initWebClient(WebClient.Builder webClientBuilder) {
@@ -56,7 +58,7 @@ public class SlackBotService {
     public void showMenu(EventCallBackRequest request) {
         switch (EventType.of(request.getType())) {
             case APP_MENTION:
-                send("/chat.postMessage", new Message(request.getChannel(), "hello world"));
+                send("/chat.postMessage", InitResponseFactory.of(request.getChannel()));
                 break;
             case APP_HOME_OPENED:
                 send("/views.publish", InitHomeMenuResponseFactory.of(request.getUserId()));
@@ -64,25 +66,23 @@ public class SlackBotService {
     }
 
     public void showModal(BlockActionRequest request) {
-        if (request.getBlockId().equals("initial_block")) {
-            String type = request.getActionId();
-            List<Restaurant> restaurants = findRestaurants(type);
-            ModalResponse modalResponse = ResultResponseFactory.of(
-                    request.getTriggerId(), RestaurantType.from(type), restaurants);
-            send("/views.open", modalResponse);
+        switch (BlockIdType.of(request.getBlockId())) {
+            case RECOMMEND_MENU:
+                List<Restaurant> recommendRestaurants = restaurantService.findRecommends();
+                ModalResponse recommendModalResponse = ResultResponseFactory.ofRandom(
+                        request.getTriggerId(), recommendRestaurants);
+                send("/views.open", recommendModalResponse);
+                break;
+            case RETRIEVE_MENU:
+                RestaurantType restaurantType = RestaurantType.from(request.getActionId());
+                List<Restaurant> restaurants = restaurantService.findBy(restaurantType);
+                ModalResponse modalResponse = ResultResponseFactory.of(
+                        request.getTriggerId(), restaurantType, restaurants);
+                send("/views.open", modalResponse);
+                break;
+            case EAT_TOGETHER:
+                // 신청 추가
         }
-    }
-
-    private List<Restaurant> findRestaurants(String type) {
-        Restaurant restaurant = new Restaurant(
-                "수가성순두부전문점",
-                "한식",
-                "해물순두부",
-                8000,
-                "https://store.naver.com/restaurants/detail?id=13158870",
-                "http://bitly.kr/CRATAuHz"
-        ); // RestaurantService가 데이터 불러오기
-        return Arrays.asList(restaurant);
     }
 
     private void send(String url, Object dto) {
@@ -91,7 +91,7 @@ public class SlackBotService {
                 .body(BodyInserters.fromValue(dto))
                 .exchange().block().bodyToMono(String.class)
                 .block();
-        logger.debug("WebClient Response: {}", response);
+        logger.info("response = {}", response);
     }
 
 }

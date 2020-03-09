@@ -43,6 +43,8 @@ public class SlackBotController {
     @PostMapping("/slack/interaction")
     public ResponseEntity interaction(@RequestParam Map<String, String> req) throws IOException {
         JsonNode reqJson = objectMapper.readTree(req.get("payload"));
+        System.out.println();
+        System.out.println("reqJson : " + reqJson);
         switch (RequestType.of(reqJson.get("type").asText())) {
             case BLOCK_ACTIONS:
                 slackBotService.showModal(jsonToDto(reqJson, BlockActionRequest.class));

@@ -1,26 +1,21 @@
 package org.woowacourse.lunchbot.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import org.woowacourse.lunchbot.slack.RestaurantType;
 
-@Entity
 public class Restaurant {
 
-    @Id
-    @GeneratedValue
     private long id;
-
     private String name;
-    private String type;
+    private RestaurantType type;
     private String mainMenu;
     private int price;
     private String url;
     private String imageUrl;
 
     public Restaurant(
+            long id,
             String name,
-            String type,
+            RestaurantType type,
             String mainMenu,
             int price,
             String url,
@@ -29,6 +24,7 @@ public class Restaurant {
 //        Assert.hasLength(name, "name should be needed");
 //        Assert.hasLength(type, "type should be needed");
 //        Assert.hasLength(mainMenu, "mainMenu should be needed");
+        this.id = id;
         this.name = name;
         this.type = type;
         this.mainMenu = mainMenu;
@@ -41,7 +37,7 @@ public class Restaurant {
         return name;
     }
 
-    public String getType() {
+    public RestaurantType getType() {
         return type;
     }
 

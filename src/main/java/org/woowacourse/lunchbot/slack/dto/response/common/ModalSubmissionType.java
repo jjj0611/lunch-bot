@@ -7,10 +7,10 @@ public enum ModalSubmissionType {
     RECOMMEND_RESULT("recommend_result"),
     KOREAN_RESULT("korean_result"),
     CHINESE_RESULT("chinese_result"),
+    SNACK_RESULT("snack_result"),
     WESTERN_RESULT("western_result"),
-    INDIA_RESULT("india_result"),
-    VIETNAM_RESULT("vietnam_result"),
-    JAPANESE_RESULT("japanese_result");
+    JAPANESE_RESULT("japanese_result"),
+    ETC_RESULT("etc_result");
 
     @JsonValue
     private String type;
