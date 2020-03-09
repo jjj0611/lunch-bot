@@ -50,8 +50,8 @@ public class BlockResponseFactory {
 
     public static Block createTogetherActionBlock(String blockId) {
         List<Element> elements = Arrays.asList(
-                new ButtonElement(new PlainText(":handshake: 같이 먹어요"), "register"),
-                new ButtonElement(new PlainText(":ok_hand: 결과 확인"), "check")
+                new ButtonElement(new PlainText(":handshake: 같이 먹어요"), "apply"),
+                new ButtonElement(new PlainText(":ok_hand: 결과 확인"), "result")
         );
 
         return new ActionsBlock(blockId, elements);

@@ -11,6 +11,7 @@ import org.woowacourse.lunchbot.slack.fragment.composition.text.PlainText;
 import org.woowacourse.lunchbot.slack.fragment.element.Element;
 import org.woowacourse.lunchbot.slack.fragment.view.ModalView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,14 +44,31 @@ public class ResultResponseFactory {
         return new ModalResponse(triggerId, modalView);
     }
 
-    public static ModalResponse of (String triggerId, String result) {
+    public static ModalResponse of(String triggerId, String result) {
         ModalView modalView = new ModalView(
                 ModalSubmissionType.EAT_TOGETHER,
-                new PlainText("같이 먹어요"),
+                new PlainText("같이 먹어요 신청"),
                 new PlainText("확인"),
                 Arrays.asList(new SectionBlock(new PlainText(result)))
         );
 
+        return new ModalResponse(triggerId, modalView);
+    }
+
+    public static ModalResponse of(String triggerId, List<List<String>> results) {
+        List<Block> blocks = new ArrayList<>();
+        StringBuilder names = new StringBuilder();
+        for (List<String> result : results) {
+            names.append(results.toString());
+            names.append("\n");
+        }
+
+        ModalView modalView = new ModalView(
+                ModalSubmissionType.EAT_TOGETHER,
+                new PlainText("같이 먹어요 결과"),
+                new PlainText("확인"),
+                Arrays.asList(new SectionBlock(new PlainText(names.toString())))
+        );
         return new ModalResponse(triggerId, modalView);
     }
 }

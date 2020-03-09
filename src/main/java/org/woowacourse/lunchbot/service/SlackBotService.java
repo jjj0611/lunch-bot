@@ -12,6 +12,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.woowacourse.lunchbot.domain.EatTogether;
+import org.woowacourse.lunchbot.domain.MatchEatTogether;
 import org.woowacourse.lunchbot.domain.Restaurant;
 import org.woowacourse.lunchbot.slack.BlockIdType;
 import org.woowacourse.lunchbot.slack.EventType;
@@ -84,10 +85,20 @@ public class SlackBotService {
                 send("/views.open", modalResponse);
                 break;
             case EAT_TOGETHER:
-                String result = EatTogether.getResult(user.getId());
-                System.out.println("result! "+result);
-                modalResponse = ResultResponseFactory.of(
-                        request.getTriggerId(), result);
+                String result = "";
+                result = EatTogether.getResult(user.getId());
+                modalResponse = ResultResponseFactory.of(request.getTriggerId(), result);
+                if (request.getActionId().equals("apply")) {
+                    result = EatTogether.getResult(user.getId());
+                    modalResponse = ResultResponseFactory.of(request.getTriggerId(), result);
+                }
+
+                if (request.getActionId().equals("result")) {
+                    MatchEatTogether matchEatTogether = new MatchEatTogether();
+                    matchEatTogether.match();
+                    List<List<String>> list = matchEatTogether.getResult();
+                    modalResponse = ResultResponseFactory.of(request.getTriggerId(), list);
+                }
                 send("/views.open", modalResponse);
         }
     }
