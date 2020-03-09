@@ -1,10 +1,12 @@
 package org.woowacourse.lunchbot.domain;
 
+import org.woowacourse.lunchbot.slack.RestaurantType;
+
 public class Restaurant {
 
     private long id;
     private String name;
-    private String type;
+    private RestaurantType type;
     private String mainMenu;
     private int price;
     private String url;
@@ -13,7 +15,7 @@ public class Restaurant {
     public Restaurant(
             long id,
             String name,
-            String type,
+            RestaurantType type,
             String mainMenu,
             int price,
             String url,
@@ -35,7 +37,7 @@ public class Restaurant {
         return name;
     }
 
-    public String getType() {
+    public RestaurantType getType() {
         return type;
     }
 

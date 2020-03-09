@@ -14,6 +14,7 @@ import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import org.springframework.stereotype.Component;
+import org.woowacourse.lunchbot.slack.RestaurantType;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,6 +24,7 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class GSpreadFetcher {
@@ -31,6 +33,37 @@ public class GSpreadFetcher {
     private static final String TOKENS_DIRECTORY_PATH = "tokens";
     private static final List<String> SCOPES = Collections.singletonList(SheetsScopes.SPREADSHEETS_READONLY);
     private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
+
+    public List<Restaurant> fetchRestaurants() throws GeneralSecurityException, IOException {
+        List<List<Object>> values = getData();
+
+        List<Restaurant> restaurants = new ArrayList<>();
+
+        for (List<Object> row : values) {
+            List<String> value = convertToString(row);
+            Restaurant restaurant = convertToRestaurant(value);
+            restaurants.add(restaurant);
+        }
+        return restaurants;
+    }
+
+    private Restaurant convertToRestaurant(List<String> value) {
+        Long id = Long.parseLong(value.get(0));
+        String name = value.get(1);
+        RestaurantType type = RestaurantType.createFromTitle(value.get(2));
+        String mainMenu = value.get(3);
+        int price = Integer.parseInt(value.get(4));
+        String url = value.get(5);
+        String imageUrl = value.get(6);
+        return new Restaurant(id, name, type, mainMenu, price, url, imageUrl);
+    }
+
+    private List<String> convertToString(List<Object> row) {
+        return row.stream()
+                .map(value -> value.toString().trim())
+                .collect(Collectors.toList());
+
+    }
 
     private Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
         // Load client secrets.
@@ -50,7 +83,7 @@ public class GSpreadFetcher {
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
-    public List<Restaurant> getData() throws GeneralSecurityException, IOException {
+    private List<List<Object>> getData() throws GeneralSecurityException, IOException {
         // Build a new authorized API client service.
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         final String spreadsheetId = "1eYPuQ0porSnVS8RvyzjSbci_lrQU3jjFVwKhlgaY07I";
@@ -62,16 +95,11 @@ public class GSpreadFetcher {
                 .get(spreadsheetId, range)
                 .execute();
 
-        List<Restaurant> restaurants = new ArrayList<>();
         List<List<Object>> values = response.getValues();
         if (values == null || values.isEmpty()) {
             throw new IllegalArgumentException("파일 읽기 실패");
         }
-        for (List row : values) {
-            RestaurantDto restaurantDto = new RestaurantDto(row);
-            Restaurant restaurant = restaurantDto.convertToRestaurant();
-            restaurants.add(restaurant);
-        }
-        return restaurants;
+
+        return values;
     }
 }

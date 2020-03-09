@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.woowacourse.lunchbot.domain.Restaurant;
 import org.woowacourse.lunchbot.slack.EventType;
 import org.woowacourse.lunchbot.slack.RestaurantType;
 import org.woowacourse.lunchbot.slack.dto.request.BlockActionRequest;
@@ -19,7 +20,6 @@ import org.woowacourse.lunchbot.slack.dto.response.Message;
 import org.woowacourse.lunchbot.slack.dto.response.common.ModalResponse;
 import org.woowacourse.lunchbot.slack.dto.response.init.InitHomeMenuResponseFactory;
 import org.woowacourse.lunchbot.slack.dto.response.result.ResultResponseFactory;
-import org.woowacourse.lunchbot.slack.fragment.block.Block;
 
 import java.util.List;
 
@@ -67,7 +67,7 @@ public class SlackBotService {
     public void showModal(BlockActionRequest request) {
         if (request.getBlockId().equals("initial_block")) {
             RestaurantType restaurantType = RestaurantType.from(request.getActionId());
-            List<Block> restaurants = restaurantService.findByType(restaurantType);
+            List<Restaurant> restaurants = restaurantService.findByType(restaurantType);
             ModalResponse modalResponse = ResultResponseFactory.of(
                     request.getTriggerId(), restaurantType, restaurants);
             send("/views.open", modalResponse);
