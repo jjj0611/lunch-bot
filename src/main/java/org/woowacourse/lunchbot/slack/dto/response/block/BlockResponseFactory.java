@@ -22,6 +22,11 @@ public class BlockResponseFactory {
         return new SectionBlock(text, element);
     }
 
+    public static Block createRestaurantBlockWithoutImage(Restaurant restaurant) {
+        Text text = MrkdwnText.createRestuarantTextFrom(restaurant);
+        return new SectionBlock(text);
+    }
+
     public static Block createRecommendBlock(String blockId) {
         List<Element> elements = Arrays.asList(
                 new ButtonElement(new PlainText(":fortune_cookie: 오늘 뭐 먹지?"), "recommend")

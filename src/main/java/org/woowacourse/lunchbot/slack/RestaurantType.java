@@ -5,7 +5,6 @@ import java.util.Optional;
 
 public enum RestaurantType {
 
-    RECOMMEND("recommend", "recommend_result", "오늘의 추천"),
     KOREAN("korean", "korean_result", "한식"),
     CHINESE("chinese", "chinese_result", "중식"),
     SNACK("snack", "snack_result", "분식"),

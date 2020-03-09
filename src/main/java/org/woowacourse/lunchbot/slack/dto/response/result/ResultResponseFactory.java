@@ -13,13 +13,26 @@ import java.util.stream.Collectors;
 
 public class ResultResponseFactory {
 
+    public static ModalResponse ofRandom(String triggerId, List<Restaurant> restaurants) {
+        ModalView modalView = new ModalView(
+                ModalSubmissionType.RECOMMEND_RESULT,
+                new PlainText("오늘의 추천"),
+                new PlainText("취소"),
+                restaurants.stream()
+                        .map(BlockResponseFactory::createRestaurantBlock)
+                        .collect(Collectors.toList())
+        );
+
+        return new ModalResponse(triggerId, modalView);
+    }
+
     public static ModalResponse of(String triggerId, RestaurantType restaurantType, List<Restaurant> restaurants) {
         ModalView modalView = new ModalView(
                 ModalSubmissionType.of(restaurantType.getModalSubmissionType()),
                 new PlainText(restaurantType.getTitle()),
                 new PlainText("취소"),
                 restaurants.stream()
-                        .map(BlockResponseFactory::createRestaurantBlock)
+                        .map(BlockResponseFactory::createRestaurantBlockWithoutImage)
                         .collect(Collectors.toList())
         );
 

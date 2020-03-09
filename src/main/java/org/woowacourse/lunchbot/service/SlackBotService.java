@@ -69,8 +69,8 @@ public class SlackBotService {
         switch (BlockIdType.of(request.getBlockId())) {
             case RECOMMEND_MENU:
                 List<Restaurant> recommendRestaurants = restaurantService.findRecommends();
-                ModalResponse recommendModalResponse = ResultResponseFactory.of(
-                        request.getTriggerId(), RestaurantType.RECOMMEND, recommendRestaurants);
+                ModalResponse recommendModalResponse = ResultResponseFactory.ofRandom(
+                        request.getTriggerId(), recommendRestaurants);
                 send("view.open", recommendModalResponse);
                 break;
             case RETRIEVE_MENU:
