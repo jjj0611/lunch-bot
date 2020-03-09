@@ -5,9 +5,13 @@ import org.woowacourse.lunchbot.slack.RestaurantType;
 import org.woowacourse.lunchbot.slack.dto.response.block.BlockResponseFactory;
 import org.woowacourse.lunchbot.slack.dto.response.common.ModalResponse;
 import org.woowacourse.lunchbot.slack.dto.response.common.ModalSubmissionType;
+import org.woowacourse.lunchbot.slack.fragment.block.Block;
+import org.woowacourse.lunchbot.slack.fragment.block.SectionBlock;
 import org.woowacourse.lunchbot.slack.fragment.composition.text.PlainText;
+import org.woowacourse.lunchbot.slack.fragment.element.Element;
 import org.woowacourse.lunchbot.slack.fragment.view.ModalView;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,7 +21,7 @@ public class ResultResponseFactory {
         ModalView modalView = new ModalView(
                 ModalSubmissionType.RECOMMEND_RESULT,
                 new PlainText("오늘의 추천"),
-                new PlainText("취소"),
+                new PlainText("확인"),
                 restaurants.stream()
                         .map(BlockResponseFactory::createRestaurantBlock)
                         .collect(Collectors.toList())
@@ -30,7 +34,7 @@ public class ResultResponseFactory {
         ModalView modalView = new ModalView(
                 ModalSubmissionType.of(restaurantType.getModalSubmissionType()),
                 new PlainText(restaurantType.getTitle()),
-                new PlainText("취소"),
+                new PlainText("확인"),
                 restaurants.stream()
                         .map(BlockResponseFactory::createRestaurantBlockWithoutImage)
                         .collect(Collectors.toList())
@@ -39,4 +43,14 @@ public class ResultResponseFactory {
         return new ModalResponse(triggerId, modalView);
     }
 
+    public static ModalResponse of (String triggerId, String result) {
+        ModalView modalView = new ModalView(
+                ModalSubmissionType.EAT_TOGETHER,
+                new PlainText("같이 먹어요"),
+                new PlainText("확인"),
+                Arrays.asList(new SectionBlock(new PlainText(result)))
+        );
+
+        return new ModalResponse(triggerId, modalView);
+    }
 }

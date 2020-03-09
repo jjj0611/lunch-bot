@@ -11,12 +11,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.woowacourse.lunchbot.domain.EatTogether;
 import org.woowacourse.lunchbot.domain.Restaurant;
 import org.woowacourse.lunchbot.slack.BlockIdType;
 import org.woowacourse.lunchbot.slack.EventType;
 import org.woowacourse.lunchbot.slack.RestaurantType;
 import org.woowacourse.lunchbot.slack.dto.request.BlockActionRequest;
 import org.woowacourse.lunchbot.slack.dto.request.EventCallBackRequest;
+import org.woowacourse.lunchbot.slack.dto.request.User;
 import org.woowacourse.lunchbot.slack.dto.response.common.ModalResponse;
 import org.woowacourse.lunchbot.slack.dto.response.init.InitHomeMenuResponseFactory;
 import org.woowacourse.lunchbot.slack.dto.response.init.InitResponseFactory;
@@ -65,23 +67,28 @@ public class SlackBotService {
         }
     }
 
-    public void showModal(BlockActionRequest request) {
+    public void showModal(BlockActionRequest request, User user) {
+        ModalResponse modalResponse = null;
         switch (BlockIdType.of(request.getBlockId())) {
             case RECOMMEND_MENU:
                 List<Restaurant> recommendRestaurants = restaurantService.findRecommends();
-                ModalResponse recommendModalResponse = ResultResponseFactory.ofRandom(
+                modalResponse = ResultResponseFactory.ofRandom(
                         request.getTriggerId(), recommendRestaurants);
-                send("/views.open", recommendModalResponse);
+                send("/views.open", modalResponse);
                 break;
             case RETRIEVE_MENU:
                 RestaurantType restaurantType = RestaurantType.from(request.getActionId());
                 List<Restaurant> restaurants = restaurantService.findBy(restaurantType);
-                ModalResponse modalResponse = ResultResponseFactory.of(
+                modalResponse = ResultResponseFactory.of(
                         request.getTriggerId(), restaurantType, restaurants);
                 send("/views.open", modalResponse);
                 break;
             case EAT_TOGETHER:
-                // 신청 추가
+                String result = EatTogether.getResult(user.getId());
+                System.out.println("result! "+result);
+                modalResponse = ResultResponseFactory.of(
+                        request.getTriggerId(), result);
+                send("/views.open", modalResponse);
         }
     }
 

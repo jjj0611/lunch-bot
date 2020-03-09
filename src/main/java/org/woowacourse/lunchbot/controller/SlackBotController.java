@@ -12,6 +12,7 @@ import org.woowacourse.lunchbot.service.SlackBotService;
 import org.woowacourse.lunchbot.slack.RequestType;
 import org.woowacourse.lunchbot.slack.dto.request.BlockActionRequest;
 import org.woowacourse.lunchbot.slack.dto.request.EventCallBackRequest;
+import org.woowacourse.lunchbot.slack.dto.request.User;
 
 import java.io.IOException;
 import java.util.Map;
@@ -47,7 +48,8 @@ public class SlackBotController {
         System.out.println("reqJson : " + reqJson);
         switch (RequestType.of(reqJson.get("type").asText())) {
             case BLOCK_ACTIONS:
-                slackBotService.showModal(jsonToDto(reqJson, BlockActionRequest.class));
+                slackBotService.showModal(jsonToDto(reqJson, BlockActionRequest.class),
+                        jsonToDto(reqJson.get("user"), User.class));
                 return ResponseEntity.ok().build();
             case VIEW_SUBMISSION:
 //                return ResponseEntity.ok(Objects.requireNonNull(generateModalSubmissionResponse(reqJson)));
