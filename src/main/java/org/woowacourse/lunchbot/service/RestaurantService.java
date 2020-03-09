@@ -16,7 +16,11 @@ public class RestaurantService {
         this.restaurants = restaurants;
     }
 
-    public List<Restaurant> findByType(RestaurantType restaurantType) {
+    public List<Restaurant> findBy(RestaurantType restaurantType) {
         return restaurants.get(restaurantType);
+    }
+
+    public List<Restaurant> findRecommends() {
+        return restaurants.getRecommendsOfRandom();
     }
 }

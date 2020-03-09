@@ -8,10 +8,10 @@ public enum RestaurantType {
     RECOMMEND("recommend", "recommend_result", "오늘의 추천"),
     KOREAN("korean", "korean_result", "한식"),
     CHINESE("chinese", "chinese_result", "중식"),
+    SNACK("snack", "snack_result", "분식"),
     WESTERN("western", "western_result", "양식"),
-    INDIA("india", "india_result", "인도식"),
-    VIETNAM("vietnam", "vietnam_result", "베트남식"),
-    JAPANESE("japanese", "japanese_result", "일식");
+    JAPANESE("japanese", "japanese_result", "일식"),
+    ETC("etc", "etc_result", "기타");
 
     private String type;
     private String modalSubmissionType;
@@ -31,7 +31,7 @@ public enum RestaurantType {
         Optional<RestaurantType> restaurantTypeOptional = Arrays.stream(values())
                 .filter(type -> type.title.equals(title))
                 .findAny();
-        return restaurantTypeOptional.orElse(INDIA);
+        return restaurantTypeOptional.orElse(ETC);
     }
 
     public String getModalSubmissionType() {

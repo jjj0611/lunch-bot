@@ -2,13 +2,10 @@ package org.woowacourse.lunchbot.slack.dto.response.result;
 
 import org.woowacourse.lunchbot.domain.Restaurant;
 import org.woowacourse.lunchbot.slack.RestaurantType;
+import org.woowacourse.lunchbot.slack.dto.response.block.BlockResponseFactory;
 import org.woowacourse.lunchbot.slack.dto.response.common.ModalResponse;
 import org.woowacourse.lunchbot.slack.dto.response.common.ModalSubmissionType;
-import org.woowacourse.lunchbot.slack.fragment.block.Block;
-import org.woowacourse.lunchbot.slack.fragment.block.SectionBlock;
-import org.woowacourse.lunchbot.slack.fragment.composition.text.MrkdwnText;
 import org.woowacourse.lunchbot.slack.fragment.composition.text.PlainText;
-import org.woowacourse.lunchbot.slack.fragment.element.ImageElement;
 import org.woowacourse.lunchbot.slack.fragment.view.ModalView;
 
 import java.util.List;
