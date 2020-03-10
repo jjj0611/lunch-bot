@@ -12,7 +12,7 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.woowacourse.lunchbot.domain.EatTogether;
-import org.woowacourse.lunchbot.domain.MatchEatTogether;
+import org.woowacourse.lunchbot.domain.EatTogetherMatcher;
 import org.woowacourse.lunchbot.domain.Restaurant;
 import org.woowacourse.lunchbot.slack.BlockIdType;
 import org.woowacourse.lunchbot.slack.EventType;
@@ -34,7 +34,7 @@ public class SlackBotService {
     private static final Logger logger = LoggerFactory.getLogger(SlackBotService.class);
 
     private static final String BASE_URL = "https://slack.com/api";
-    private static final String TOKEN = "Bearer " + "xoxb-946531805872-946555368885-pPUBbFvqwgg35vvv5kRBWBLm";
+    private static final String TOKEN = "Bearer " + "xoxb-946531805872-953180476354-gyl145eaYz6cJQkOLQovT1we";
 
     private final ObjectMapper objectMapper;
     private final WebClient webClient;
@@ -71,12 +71,12 @@ public class SlackBotService {
     public void showModal(BlockActionRequest request, User user) {
         ModalResponse modalResponse = null;
         switch (BlockIdType.of(request.getBlockId())) {
-            case RECOMMEND_MENU:
-                List<Restaurant> recommendRestaurants = restaurantService.findRecommends();
-                modalResponse = ResultResponseFactory.ofRandom(
-                        request.getTriggerId(), recommendRestaurants);
-                send("/views.open", modalResponse);
-                break;
+//            case RECOMMEND_MENU:
+//                List<Restaurant> recommendRestaurants = restaurantService.findRecommends();
+//                modalResponse = ResultResponseFactory.ofRandom(
+//                        request.getTriggerId(), recommendRestaurants);
+//                send("/views.open", modalResponse);
+//                break;
             case RETRIEVE_MENU:
                 RestaurantType restaurantType = RestaurantType.from(request.getActionId());
                 List<Restaurant> restaurants = restaurantService.findBy(restaurantType);
@@ -84,19 +84,21 @@ public class SlackBotService {
                         request.getTriggerId(), restaurantType, restaurants);
                 send("/views.open", modalResponse);
                 break;
-            case EAT_TOGETHER:
+            case RECOMMEND_AND_EAT_TOGETHER:
+                if (request.getActionId().equals("recommend")) {
+                    modalResponse = ResultResponseFactory.ofRandom(request.getTriggerId(), restaurantService.findRecommends());
+                }
+
                 String result = "";
-                result = EatTogether.getResult(user.getId());
-                modalResponse = ResultResponseFactory.of(request.getTriggerId(), result);
                 if (request.getActionId().equals("apply")) {
                     result = EatTogether.getResult(user.getId());
-                    modalResponse = ResultResponseFactory.of(request.getTriggerId(), result);
+                modalResponse = ResultResponseFactory.of(request.getTriggerId(), result);
                 }
 
                 if (request.getActionId().equals("result")) {
-                    MatchEatTogether matchEatTogether = new MatchEatTogether();
-                    matchEatTogether.match();
-                    List<List<String>> list = matchEatTogether.getResult();
+                    EatTogetherMatcher eatTogetherMatcher = new EatTogetherMatcher();
+                    eatTogetherMatcher.match();
+                    List<List<String>> list = eatTogetherMatcher.getResult();
                     modalResponse = ResultResponseFactory.of(request.getTriggerId(), list);
                 }
                 send("/views.open", modalResponse);

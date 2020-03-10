@@ -20,9 +20,9 @@ public class InitHomeMenuResponseFactory {
                 new ImageElement("https://api.slack.com/img/blocks/bkb_template_images/notifications.png",
                         "calendar thumbnail")
         ));
-        blocks.add(BlockResponseFactory.createTogetherActionBlock("eat_together"));
+
         blocks.add(new DividerBlock());
-        blocks.add(BlockResponseFactory.createRecommendBlock("recommend_menu"));
+        blocks.add(BlockResponseFactory.createRecoomendAndEatTogetherActionBlock("recommend_and_eat_together"));
         blocks.add(BlockResponseFactory.createInitActionBlock("retrieve_menu"));
 
         return new HomeMenuResponse(userId, new HomeView(blocks));

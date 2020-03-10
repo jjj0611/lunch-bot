@@ -3,7 +3,7 @@ package org.woowacourse.lunchbot.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MatchEatTogether {
+public class EatTogetherMatcher {
     private static List<List<String>> matchedUser;
     private static final int offset;
 
