@@ -92,7 +92,7 @@ public class SlackBotService {
                 String result = "";
                 if (request.getActionId().equals("apply")) {
                     result = EatTogether.getResult(user.getId());
-                modalResponse = ResultResponseFactory.of(request.getTriggerId(), result);
+                    modalResponse = ResultResponseFactory.of(request.getTriggerId(), result);
                 }
 
                 if (request.getActionId().equals("result")) {

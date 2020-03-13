@@ -1,13 +1,14 @@
 package org.woowacourse.lunchbot.domain;
 
 import com.google.api.client.util.ArrayMap;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.LocalTime;
 import java.util.*;
 
 public class EatTogether {
-    private static List<String> applyUser;
-    private static List<List<LocalTime>> timeScope;
+    private static final List<String> applyUser;
+    private static final List<List<LocalTime>> timeScope;
     private static final int LUNCH_INDEX;
     private static final int DINNER_INDEX;
 
@@ -20,7 +21,7 @@ public class EatTogether {
         DINNER_INDEX = 1;
     }
 
-    public static String getResult(String userId) {
+    public  static String getResult(String userId) {
         if (!validateTimeScope()) {
             return "신청 가능한 시간이 아닙니다.";
         }

@@ -1,5 +1,7 @@
 package org.woowacourse.lunchbot.domain;
 
+import org.woowacourse.lunchbot.service.UserService;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +35,9 @@ public class EatTogetherMatcher {
     }
 
     public List<List<String>> getResult() {
+        UserService userService = new UserService();
+        userService.getDisplayName();
+        userService.getAllUserId();
         return matchedUser;
     }
 }

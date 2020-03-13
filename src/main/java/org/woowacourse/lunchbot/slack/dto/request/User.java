@@ -1,17 +1,10 @@
 package org.woowacourse.lunchbot.slack.dto.request;
 
 public class User {
-    private final String id;
-    private final String userName;
-    private final String name;
-    private final String teamId;
-
-    public User() {
-        this.id = "";
-        this.userName = "";
-        this.name = "";
-        this.teamId = "";
-    }
+    private String id;
+    private String userName;
+    private String name;
+    private String teamId;
 
     public User(String id, String userName, String name, String teamId) {
         this.id = id;
@@ -19,7 +12,6 @@ public class User {
         this.name = name;
         this.teamId = teamId;
     }
-
 
     public String getId() {
         return id;
