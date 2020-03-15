@@ -13,7 +13,7 @@ import java.util.Map;
 
 @Component
 public class Restaurants {
-
+    private static final int RECOMMEND_SIZE = 5;
     private final GSpreadFetcher gSpreadFetcher;
     private List<Restaurant> recommends;
     private Map<RestaurantType, List<Restaurant>> restaurantTypeMatcher = new HashMap<>();
@@ -44,6 +44,6 @@ public class Restaurants {
         }
 
         Collections.shuffle(restaurants);
-        recommends = restaurants.subList(0, 5);
+        recommends = restaurants.subList(0, RECOMMEND_SIZE);
     }
 }

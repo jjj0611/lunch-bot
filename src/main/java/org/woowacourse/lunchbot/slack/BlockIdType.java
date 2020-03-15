@@ -1,14 +1,10 @@
 package org.woowacourse.lunchbot.slack;
 
 public enum BlockIdType {
-
-    EAT_TOGETHER,
-    RECOMMEND_MENU,
+    SPECIAL_SERVICE,
     RETRIEVE_MENU;
-
 
     public static BlockIdType of(String name) {
         return valueOf(name.toUpperCase());
     }
-
 }

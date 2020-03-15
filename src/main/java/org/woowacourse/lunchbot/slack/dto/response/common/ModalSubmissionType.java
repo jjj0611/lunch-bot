@@ -10,7 +10,8 @@ public enum ModalSubmissionType {
     SNACK_RESULT("snack_result"),
     WESTERN_RESULT("western_result"),
     JAPANESE_RESULT("japanese_result"),
-    ETC_RESULT("etc_result");
+    ETC_RESULT("etc_result"),
+    EAT_TOGETHER("eat_together");
 
     @JsonValue
     private String type;
