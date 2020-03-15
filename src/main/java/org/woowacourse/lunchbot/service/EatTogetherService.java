@@ -43,7 +43,6 @@ public class EatTogetherService {
                     || (now.compareTo(LocalTime.of(18, 0)) >= 0
                     && now.compareTo(LocalTime.of(20, 0)) < 0);
         };
-    }
 
     public EatTogetherService(SlackApiService slackApiService, UserMatcher userMatcher) {
         this.slackApiService = slackApiService;
