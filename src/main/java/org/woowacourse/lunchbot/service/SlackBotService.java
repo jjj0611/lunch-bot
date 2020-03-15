@@ -54,7 +54,7 @@ public class SlackBotService {
                 modalResponse = ResultResponseFactory.ofRestaurants(triggerId, restaurantType, restaurants);
                 slackApiService.send("/views.open", modalResponse);
                 break;
-            case RECOMMEND_AND_EAT_TOGETHER:
+            case SPECIAL_SERVICE:
                 if (request.getActionId().equals("recommend")) {
                     modalResponse = ResultResponseFactory.ofRecommend(triggerId, restaurantService.findRecommends());
                 }

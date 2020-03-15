@@ -55,7 +55,7 @@ public class EatTogetherService {
         }
         Optional<UserProfile> userProfile = slackApiService.getUserProfile(request.getUserId());
         if (userProfile.isPresent()) {
-            return userMatcher.add(userProfile.get()) ? SUCCESS_MESSAGE : ALREADY_APPLIED;
+            return userMatcher.apply(userProfile.get()) ? SUCCESS_MESSAGE : ALREADY_APPLIED;
         }
         return REQUEST_FAILURE_MESSAGE;
     }
