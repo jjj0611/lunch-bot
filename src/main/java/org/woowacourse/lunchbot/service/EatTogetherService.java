@@ -72,4 +72,10 @@ public class EatTogetherService {
         }
         return userMatcher.getMatchedUsers();
     }
+
+    public void updateResults() {
+        userMatcher.resetMatchedUsers();
+        userMatcher.generateMatchedUsers();
+        userMatcher.resetAppliedUsers();
+    }
 }
