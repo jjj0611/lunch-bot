@@ -31,13 +31,20 @@ public class Restaurants {
         return recommends;
     }
 
-    private void initializeRestaurants() throws GeneralSecurityException, IOException {
+    public void initializeRestaurants() {
         restaurantTypeMatcher = new HashMap<>();
         for (RestaurantType restaurantType : RestaurantType.values()) {
             restaurantTypeMatcher.put(restaurantType, new ArrayList<>());
         }
 
-        List<Restaurant> restaurants = gSpreadFetcher.fetchRestaurants();
+        List<Restaurant> restaurants = null;
+        try {
+            restaurants = gSpreadFetcher.fetchRestaurants();
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         for (Restaurant restaurant : restaurants) {
             RestaurantType restaurantType = restaurant.getType();
             restaurantTypeMatcher.get(restaurantType).add(restaurant);
