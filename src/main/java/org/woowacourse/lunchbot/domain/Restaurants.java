@@ -1,6 +1,7 @@
 package org.woowacourse.lunchbot.domain;
 
 import org.springframework.stereotype.Component;
+import org.woowacourse.lunchbot.exception.FailToFetchRestaurantsException;
 import org.woowacourse.lunchbot.slack.RestaurantType;
 
 import java.io.IOException;
@@ -18,7 +19,7 @@ public class Restaurants {
     private List<Restaurant> recommends;
     private Map<RestaurantType, List<Restaurant>> restaurantTypeMatcher = new HashMap<>();
 
-    public Restaurants(GSpreadFetcher gSpreadFetcher) throws GeneralSecurityException, IOException {
+    public Restaurants(GSpreadFetcher gSpreadFetcher) {
         this.gSpreadFetcher = gSpreadFetcher;
         initializeRestaurants();
     }
@@ -32,25 +33,21 @@ public class Restaurants {
     }
 
     public void initializeRestaurants() {
-        restaurantTypeMatcher = new HashMap<>();
-        for (RestaurantType restaurantType : RestaurantType.values()) {
-            restaurantTypeMatcher.put(restaurantType, new ArrayList<>());
-        }
-
-        List<Restaurant> restaurants = null;
         try {
-            restaurants = gSpreadFetcher.fetchRestaurants();
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        for (Restaurant restaurant : restaurants) {
-            RestaurantType restaurantType = restaurant.getType();
-            restaurantTypeMatcher.get(restaurantType).add(restaurant);
-        }
+            List<Restaurant> restaurants = gSpreadFetcher.fetchRestaurants();
+            restaurantTypeMatcher = new HashMap<>();
+            for (RestaurantType restaurantType : RestaurantType.values()) {
+                restaurantTypeMatcher.put(restaurantType, new ArrayList<>());
+            }
+            for (Restaurant restaurant : restaurants) {
+                RestaurantType restaurantType = restaurant.getType();
+                restaurantTypeMatcher.get(restaurantType).add(restaurant);
+            }
 
-        Collections.shuffle(restaurants);
-        recommends = restaurants.subList(0, RECOMMEND_SIZE);
+            Collections.shuffle(restaurants);
+            recommends = restaurants.subList(0, RECOMMEND_SIZE);
+        } catch (GeneralSecurityException | IOException e) {
+            throw new FailToFetchRestaurantsException(e.getMessage());
+        }
     }
 }

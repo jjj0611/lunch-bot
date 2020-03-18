@@ -1,7 +1,9 @@
 package org.woowacourse.lunchbot.domain;
 
+import lombok.Getter;
 import org.woowacourse.lunchbot.slack.RestaurantType;
 
+@Getter
 public class Restaurant {
 
     private long id;
@@ -21,9 +23,6 @@ public class Restaurant {
             String url,
             String imageUrl
     ) {
-//        Assert.hasLength(name, "name should be needed");
-//        Assert.hasLength(type, "type should be needed");
-//        Assert.hasLength(mainMenu, "mainMenu should be needed");
         this.id = id;
         this.name = name;
         this.type = type;
@@ -31,29 +30,5 @@ public class Restaurant {
         this.price = price;
         this.url = url;
         this.imageUrl = imageUrl;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public RestaurantType getType() {
-        return type;
-    }
-
-    public String getMainMenu() {
-        return mainMenu;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
     }
 }

@@ -10,6 +10,7 @@ public class InitResponseFactory {
     public static InitResponse of(String channel) {
 
         List<Block> blocks = Arrays.asList(
+                BlockResponseFactory.createRecommendActionBlock("special_service"),
                 BlockResponseFactory.createInitActionBlock("retrieve_menu")
         );
 
