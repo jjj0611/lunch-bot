@@ -22,7 +22,7 @@ public class InitHomeMenuResponseFactory {
         ));
 
         blocks.add(new DividerBlock());
-        blocks.add(BlockResponseFactory.createRecoomendAndEatTogetherActionBlock("special_service"));
+        blocks.add(BlockResponseFactory.createSpecialServiceActionBlock("special_service"));
         blocks.add(BlockResponseFactory.createInitActionBlock("retrieve_menu"));
 
         return new HomeMenuResponse(userId, new HomeView(blocks));

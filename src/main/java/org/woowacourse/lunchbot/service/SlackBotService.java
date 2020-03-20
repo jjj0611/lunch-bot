@@ -6,6 +6,7 @@ import org.woowacourse.lunchbot.domain.UserProfile;
 import org.woowacourse.lunchbot.slack.BlockIdType;
 import org.woowacourse.lunchbot.slack.EventType;
 import org.woowacourse.lunchbot.slack.RestaurantType;
+import org.woowacourse.lunchbot.slack.SpecialServiceActionIdType;
 import org.woowacourse.lunchbot.slack.dto.request.BlockActionRequest;
 import org.woowacourse.lunchbot.slack.dto.request.EventCallBackRequest;
 import org.woowacourse.lunchbot.slack.dto.response.common.ModalResponse;
@@ -42,37 +43,25 @@ public class SlackBotService {
         String triggerId = request.getTriggerId();
         ModalResponse modalResponse = null;
         switch (BlockIdType.of(request.getBlockId())) {
-//            case RECOMMEND_MENU:
-//                List<Restaurant> recommendRestaurants = restaurantService.findRecommends();
-//                modalResponse = ResultResponseFactory.ofRecommend(
-//                        request.getTriggerId(), recommendRestaurants);
-//                send("/views.open", modalResponse);
-//                break;
             case RETRIEVE_MENU:
                 RestaurantType restaurantType = RestaurantType.from(request.getActionId());
                 List<Restaurant> restaurants = restaurantService.findBy(restaurantType);
                 modalResponse = ResultResponseFactory.ofRestaurants(triggerId, restaurantType, restaurants);
-                slackApiService.send("/views.open", modalResponse);
                 break;
             case SPECIAL_SERVICE:
-                if (request.getActionId().equals("recommend")) {
-                    modalResponse = ResultResponseFactory.ofRecommend(triggerId, restaurantService.findRecommends());
-                }
-
-                if (request.getActionId().equals("apply")) {
-                    String appliedMessage = eatTogetherService.apply(request);
-                    modalResponse = ResultResponseFactory.ofEatTogetherApplied(triggerId, appliedMessage);
-                }
-
-                if (request.getActionId().equals("result")) {
-                    try {
-                        List<List<UserProfile>> matchedUsers = eatTogetherService.getMatchedUsers();
+                switch (SpecialServiceActionIdType.of(request.getActionId())) {
+                    case RECOMMEND:
+                        modalResponse = ResultResponseFactory.ofRecommend(triggerId, restaurantService.findRecommends());
+                        break;
+                    case APPLY:
+                        String appliedMessage = eatTogetherService.apply(request);
+                        modalResponse = ResultResponseFactory.ofEatTogetherApplied(triggerId, appliedMessage);
+                        break;
+                    case RESULT:
+                        List<List<UserProfile>> matchedUsers = eatTogetherService.getMatchedUsers(request);
                         modalResponse = ResultResponseFactory.ofEatTogetherResult(triggerId, matchedUsers);
-                    } catch (IllegalArgumentException ie) {
-                        modalResponse = ResultResponseFactory.ofError(triggerId, ie.getMessage());
-                    }
                 }
-                slackApiService.send("/views.open", modalResponse);
         }
+        slackApiService.openModal(modalResponse);
     }
 }

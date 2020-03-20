@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 
 @Component
 public class GSpreadFetcher {
+
     private static final String APPLICATION_NAME = "Woowa Course Lunch Bot";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     private static final String TOKENS_DIRECTORY_PATH = "tokens";

@@ -57,6 +57,14 @@ public class SlackApiService {
                 .block();
     }
 
+    public void openModal(Object dto) {
+        send("/views.open", dto);
+    }
+
+    public void sendMessage(Object dto) {
+        send("/chat.postMessage", dto);
+    }
+
     public void send(String url, Object dto) {
         String response = webClient.post()
                 .uri(url)
