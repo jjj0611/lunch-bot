@@ -17,7 +17,7 @@ public class InitHomeMenuResponseFactory {
 
         blocks.add(new SectionBlock(
                 new MrkdwnText("안녕하세요!\n우아한테크코스 점심봇입니다.:santa:\n즐거운 연말 보내세요~ :wave:"),
-                new ImageElement("https://api.slack.com/img/blocks/bkb_template_images/notifications.png",
+                new ImageElement("https://avatars.slack-edge.com/2020-04-01/1043981126160_fbd4d2d70a7e452332a0_32.png",
                         "calendar thumbnail")
         ));
 
