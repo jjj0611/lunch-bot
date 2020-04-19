@@ -1,18 +1,17 @@
-package org.woowacourse.lunchbot.controller;
+package org.woowacourse.lunchbot.service;
 
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.woowacourse.lunchbot.domain.Restaurants;
-import org.woowacourse.lunchbot.service.EatTogetherService;
 
 @EnableScheduling
 @Component
-public class Scheduler {
+public class SchedulerService {
     private final EatTogetherService eatTogetherService;
     private final Restaurants restaurants;
 
-    public Scheduler(EatTogetherService eatTogetherService, Restaurants restaurants) {
+    public SchedulerService(EatTogetherService eatTogetherService, Restaurants restaurants) {
         this.eatTogetherService = eatTogetherService;
         this.restaurants = restaurants;
     }

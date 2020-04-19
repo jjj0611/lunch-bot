@@ -27,14 +27,6 @@ public class BlockResponseFactory {
         return new SectionBlock(text);
     }
 
-//    public static Block createRecommendBlock(String blockId) {
-//        List<Element> elements = Arrays.asList(
-//                new ButtonElement(new PlainText(":fortune_cookie: 오늘 뭐 먹지?"), "recommend")
-//        );
-//
-//        return new ActionsBlock(blockId, elements);
-//    }
-
     public static Block createInitActionBlock(String blockId) {
         List<Element> elements = Arrays.asList(
                 new ButtonElement(new PlainText(":rice: 한식"), "korean"),
@@ -48,11 +40,19 @@ public class BlockResponseFactory {
         return new ActionsBlock(blockId, elements);
     }
 
-    public static Block createRecoomendAndEatTogetherActionBlock(String blockId) {
+    public static Block createSpecialServiceActionBlock(String blockId) {
         List<Element> elements = Arrays.asList(
                 new ButtonElement(new PlainText(":fortune_cookie: 오늘 뭐 먹지?"), "recommend"),
                 new ButtonElement(new PlainText(":handshake: 같이 먹어요"), "apply"),
                 new ButtonElement(new PlainText(":ok_hand: 결과 확인"), "result")
+        );
+
+        return new ActionsBlock(blockId, elements);
+    }
+
+    public static Block createRecommendActionBlock(String blockId) {
+        List<Element> elements = Arrays.asList(
+                new ButtonElement(new PlainText(":fortune_cookie: 오늘 뭐 먹지?"), "recommend")
         );
 
         return new ActionsBlock(blockId, elements);

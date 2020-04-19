@@ -21,7 +21,7 @@ import java.util.Optional;
 @Service
 public class SlackApiService {
 
-    private static final Logger logger = LoggerFactory.getLogger(SlackBotService.class);
+    private static final Logger logger = LoggerFactory.getLogger(SlackApiService.class);
 
     private static final String BASE_URL = "https://slack.com/api";
     private static final String TOKEN = "Bearer " + System.getenv("BOT_TOKEN");
@@ -55,6 +55,14 @@ public class SlackApiService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
+    }
+
+    public void openModal(Object dto) {
+        send("/views.open", dto);
+    }
+
+    public void sendMessage(Object dto) {
+        send("/chat.postMessage", dto);
     }
 
     public void send(String url, Object dto) {
