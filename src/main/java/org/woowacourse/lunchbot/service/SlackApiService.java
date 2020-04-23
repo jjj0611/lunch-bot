@@ -21,7 +21,7 @@ import java.util.Optional;
 @Service
 public class SlackApiService {
 
-    private static final Logger logger = LoggerFactory.getLogger(SlackBotService.class);
+    private static final Logger logger = LoggerFactory.getLogger(SlackApiService.class);
 
     private static final String BASE_URL = "https://slack.com/api";
     private static final String TOKEN = "Bearer " + System.getenv("BOT_TOKEN");
