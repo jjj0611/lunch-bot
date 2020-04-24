@@ -1,11 +1,9 @@
 package org.woowacourse.lunchbot.service;
 
 import org.springframework.stereotype.Service;
-import org.woowacourse.lunchbot.domain.Restaurant;
 import org.woowacourse.lunchbot.domain.UserProfile;
 import org.woowacourse.lunchbot.slack.BlockIdType;
 import org.woowacourse.lunchbot.slack.EventType;
-import org.woowacourse.lunchbot.slack.RestaurantType;
 import org.woowacourse.lunchbot.slack.SpecialServiceActionIdType;
 import org.woowacourse.lunchbot.slack.dto.request.BlockActionRequest;
 import org.woowacourse.lunchbot.slack.dto.request.EventCallBackRequest;
@@ -20,12 +18,10 @@ import java.util.List;
 public class SlackBotService {
 
     private final SlackApiService slackApiService;
-    private final RestaurantService restaurantService;
     private final EatTogetherService eatTogetherService;
 
-    public SlackBotService(SlackApiService slackApiService, RestaurantService restaurantService, EatTogetherService eatTogetherService) {
+    public SlackBotService(SlackApiService slackApiService, EatTogetherService eatTogetherService) {
         this.slackApiService = slackApiService;
-        this.restaurantService = restaurantService;
         this.eatTogetherService = eatTogetherService;
     }
 
@@ -43,16 +39,8 @@ public class SlackBotService {
         String triggerId = request.getTriggerId();
         ModalResponse modalResponse = null;
         switch (BlockIdType.of(request.getBlockId())) {
-            case RETRIEVE_MENU:
-                RestaurantType restaurantType = RestaurantType.from(request.getActionId());
-                List<Restaurant> restaurants = restaurantService.findBy(restaurantType);
-                modalResponse = ResultResponseFactory.ofRestaurants(triggerId, restaurantType, restaurants);
-                break;
             case SPECIAL_SERVICE:
                 switch (SpecialServiceActionIdType.of(request.getActionId())) {
-                    case RECOMMEND:
-                        modalResponse = ResultResponseFactory.ofRecommend(triggerId, restaurantService.findRecommends());
-                        break;
                     case APPLY:
                         String appliedMessage = eatTogetherService.apply(request);
                         modalResponse = ResultResponseFactory.ofEatTogetherApplied(triggerId, appliedMessage);

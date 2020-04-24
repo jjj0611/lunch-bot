@@ -33,21 +33,21 @@ public class Restaurants {
     }
 
     public void initializeRestaurants() {
-        try {
-            List<Restaurant> restaurants = gSpreadFetcher.fetchRestaurants();
-            restaurantTypeMatcher = new HashMap<>();
-            for (RestaurantType restaurantType : RestaurantType.values()) {
-                restaurantTypeMatcher.put(restaurantType, new ArrayList<>());
-            }
-            for (Restaurant restaurant : restaurants) {
-                RestaurantType restaurantType = restaurant.getType();
-                restaurantTypeMatcher.get(restaurantType).add(restaurant);
-            }
-
-            Collections.shuffle(restaurants);
-            recommends = restaurants.subList(0, RECOMMEND_SIZE);
-        } catch (GeneralSecurityException | IOException e) {
-            throw new FailToFetchRestaurantsException(e.getMessage());
-        }
+//        try {
+//            List<Restaurant> restaurants = gSpreadFetcher.fetchRestaurants();
+//            restaurantTypeMatcher = new HashMap<>();
+//            for (RestaurantType restaurantType : RestaurantType.values()) {
+//                restaurantTypeMatcher.put(restaurantType, new ArrayList<>());
+//            }
+//            for (Restaurant restaurant : restaurants) {
+//                RestaurantType restaurantType = restaurant.getType();
+//                restaurantTypeMatcher.get(restaurantType).add(restaurant);
+//            }
+//
+//            Collections.shuffle(restaurants);
+//            recommends = restaurants.subList(0, RECOMMEND_SIZE);
+//        } catch (GeneralSecurityException | IOException e) {
+//            throw new FailToFetchRestaurantsException(e.getMessage());
+//        }
     }
 }

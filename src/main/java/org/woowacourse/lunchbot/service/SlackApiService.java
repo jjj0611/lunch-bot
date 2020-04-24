@@ -24,7 +24,7 @@ public class SlackApiService {
     private static final Logger logger = LoggerFactory.getLogger(SlackApiService.class);
 
     private static final String BASE_URL = "https://slack.com/api";
-    private static final String TOKEN = "Bearer " + System.getenv("BOT_TOKEN");
+    private static final String TOKEN = "Bearer " + System.getenv("BOT-TOKEN");
 
     private final ObjectMapper objectMapper;
     private final WebClient webClient;

@@ -8,12 +8,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.woowacourse.lunchbot.service.EatTogetherService;
 import org.woowacourse.lunchbot.service.SlackBotService;
 import org.woowacourse.lunchbot.slack.RequestType;
-import org.woowacourse.lunchbot.slack.dto.request.BlockActionRequest;
 import org.woowacourse.lunchbot.slack.dto.request.EventCallBackRequest;
 
 import java.io.IOException;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Map;
 
 @RestController
@@ -29,6 +31,7 @@ public class SlackBotController {
 
     @PostMapping("/slack/action")
     public ResponseEntity<?> handleEvents(@RequestBody JsonNode reqJson) throws JsonProcessingException {
+        System.out.println("@@@@@ Controller slack/action ");
         switch (RequestType.of(reqJson.get("type").asText())) {
             case URL_VERIFICATION:
                 return ResponseEntity.ok(reqJson.get("challenge"));
@@ -42,14 +45,13 @@ public class SlackBotController {
 
     @PostMapping("/slack/interaction")
     public ResponseEntity interaction(@RequestParam Map<String, String> req) throws IOException {
-        JsonNode reqJson = objectMapper.readTree(req.get("payload"));
-        switch (RequestType.of(reqJson.get("type").asText())) {
-            case BLOCK_ACTIONS:
-                slackBotService.showModal(jsonToDto(reqJson, BlockActionRequest.class));
-                return ResponseEntity.ok().build();
-            default:
-                return ResponseEntity.badRequest().build();
-        }
+        System.out.println("@@@@@ Controller slack/interaction ");
+        System.out.println("LocalTime.now(): "+EatTogetherService.applyTime.apply(LocalTime.now()));
+        System.out.println("LocalTime.now(Asia Seoul): "+EatTogetherService.applyTime.apply(LocalTime.now(ZoneId.of("Asia/Seoul"))));
+        System.out.println("LocalTime 09:00 "+EatTogetherService.applyTime.apply(LocalTime.of(9, 0, 0, 0)));
+        System.out.println("LocalTime 12:00 "+EatTogetherService.applyTime.apply(LocalTime.of(12, 0, 0, 0)));
+        System.out.println("LocalTime 16:00 "+EatTogetherService.applyTime.apply(LocalTime.of(16, 0, 0, 0)));
+        return ResponseEntity.ok().build();
     }
 
     private <T> T jsonToDto(JsonNode json, Class<T> type) throws JsonProcessingException {
