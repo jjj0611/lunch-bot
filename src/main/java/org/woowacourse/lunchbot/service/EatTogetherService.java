@@ -7,21 +7,19 @@ import org.woowacourse.lunchbot.exception.NotAvailableTimeException;
 import org.woowacourse.lunchbot.slack.dto.request.BlockActionRequest;
 
 import java.time.LocalTime;
-import java.time.ZonedDateTime;
-import java.time.temporal.TemporalQuery;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 @Service
 public class EatTogetherService {
 
-    private static final TemporalQuery<Boolean> applyTime;
-    private static final TemporalQuery<Boolean> resultTime;
+    private static final Function<LocalTime, Boolean> applyTime;
+    private static final Function<LocalTime, Boolean> resultTime;
     private static final String SUCCESS_MESSAGE = "성공적으로 등록되었습니다.";
     private static final String ALREADY_APPLIED = "이미 신청한 사용자입니다";
     private static final String REQUEST_FAILURE_MESSAGE = "요청에 실패했습니다.";
-    private static final String NOT_AVAILABLE_TIME = "신청 가능한 시간이 아닙니다.";
-    private static final String NO_ONE_APPLIED = "신청자가 없습니다.";
 
     private final SlackApiService slackApiService;
     private final UserMatcher userMatcher;
@@ -34,26 +32,19 @@ public class EatTogetherService {
 
 
     static {
-        applyTime =
-                temporal -> {
-                    LocalTime now = LocalTime.now();
-                    return (now.compareTo(LocalTime.of(9, 0)) >= 0
-                            && now.compareTo(LocalTime.of(11, 20)) < 0)
-                            || (now.compareTo(LocalTime.of(16, 0)) >= 0
-                            && now.compareTo(LocalTime.of(17, 30)) < 0);
-                };
+        applyTime = localTime -> (localTime.compareTo(LocalTime.of(9, 0)) >= 0
+                            && localTime.compareTo(LocalTime.of(11, 20)) < 0)
+                            || (localTime.compareTo(LocalTime.of(16, 0)) >= 0
+                            && localTime.compareTo(LocalTime.of(17, 30)) < 0);
 
-        resultTime = temporal -> {
-            LocalTime now = LocalTime.now();
-            return (now.compareTo(LocalTime.of(11, 30)) >= 0
-                    && now.compareTo(LocalTime.of(13, 30)) < 0)
-                    || (now.compareTo(LocalTime.of(18, 0)) >= 0
-                    && now.compareTo(LocalTime.of(20, 0)) < 0);
-        };
+        resultTime = localTime -> (localTime.compareTo(LocalTime.of(11, 30)) >= 0
+                    && localTime.compareTo(LocalTime.of(13, 30)) < 0)
+                    || (localTime.compareTo(LocalTime.of(18, 0)) >= 0
+                    && localTime.compareTo(LocalTime.of(20, 0)) < 0);
     }
 
     public String apply(BlockActionRequest request) {
-        if (!applyTime.queryFrom(ZonedDateTime.now())) {
+        if (!applyTime.apply(LocalTime.now(ZoneId.of("Asia/Seoul")))) {
             throw new NotAvailableTimeException(request.getTriggerId());
         }
         Optional<UserProfile> userProfile = slackApiService.getUserProfile(request.getUserId());
@@ -64,7 +55,7 @@ public class EatTogetherService {
     }
 
     public List<List<UserProfile>> getMatchedUsers(BlockActionRequest request) {
-        if (!resultTime.queryFrom(ZonedDateTime.now())) {
+        if (!resultTime.apply(LocalTime.now(ZoneId.of("Asia/Seoul")))) {
             throw new NotAvailableTimeException(request.getTriggerId());
         }
         List<List<UserProfile>> matchedUsers = userMatcher.getMatchedUsers();
