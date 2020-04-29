@@ -24,7 +24,8 @@ public class SlackApiService {
     private static final Logger logger = LoggerFactory.getLogger(SlackApiService.class);
 
     private static final String BASE_URL = "https://slack.com/api";
-    private static final String TOKEN = "Bearer " + System.getenv("BOT_TOKEN");
+    private static final String OAUTH_TOKEN = "Bearer " + System.getenv("BOT_TOKEN");
+    private static final String USER_TOKEN = "Bearer " + System.getenv("USER_TOKEN");
 
     private final ObjectMapper objectMapper;
     private final WebClient webClient;
@@ -52,6 +53,7 @@ public class SlackApiService {
                 .uri("/users.profile.get",
                         uriBuilder -> uriBuilder.queryParam("user", userId)
                                 .build())
+                .header(HttpHeaders.AUTHORIZATION, USER_TOKEN)
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();
@@ -68,6 +70,7 @@ public class SlackApiService {
     public void send(String url, Object dto) {
         String response = webClient.post()
                 .uri(url)
+                .header(HttpHeaders.AUTHORIZATION, OAUTH_TOKEN)
                 .body(BodyInserters.fromValue(dto))
                 .exchange().block().bodyToMono(String.class)
                 .block();
@@ -82,7 +85,7 @@ public class SlackApiService {
         return webClientBuilder
                 .exchangeStrategies(strategies)
                 .baseUrl(BASE_URL)
-                .defaultHeader(HttpHeaders.AUTHORIZATION, TOKEN)
+                .defaultHeader(HttpHeaders.AUTHORIZATION, OAUTH_TOKEN)
                 .build();
     }
 
